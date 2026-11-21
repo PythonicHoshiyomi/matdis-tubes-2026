@@ -198,6 +198,7 @@ edges:
     capacity: 1500.0
 
 execution_plan:
+  algorithm: "maxflow"
   start_node: 0
   goal_node: 21
   events:
