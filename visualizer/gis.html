@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JIS Traffic Network - Max-Flow Web GIS</title>
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="assets/css/gis.css" />
+</head>
+<body>
+
+<header>
+  <div>
+    <span class="badge">Matematika Diskrit · Case 22</span>
+    <h1>JIS Traffic Network — Max-Flow Web GIS</h1>
+    <p id="subtitle">Akses kendaraan menuju Jakarta International Stadium · Ford-Fulkerson vs Dinic</p>
+  </div>
+  <div class="header-actions">
+    <label class="file-btn">📂 Load hasil JSON
+      <input type="file" id="resultLoader" accept=".json" />
+    </label>
+    <label class="file-btn">🗺️ Load GeoJSON
+      <input type="file" id="geoLoader" accept=".json,.geojson" />
+    </label>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+<div id="status" class="status" hidden></div>
+
+<main class="layout">
+  <div id="map" aria-label="Peta jaringan jalan menuju JIS"></div>
+
+  <aside class="side">
+
+    <section class="panel">
+      <h2>Algoritma</h2>
+      <div class="seg" id="algo-switch">
+        <button data-algo="ff">Ford-Fulkerson</button>
+        <button data-algo="dinic" class="active">Dinic</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Skenario</h2>
+      <div id="scenario-buttons" class="seg vertical"></div>
+      <p id="scenario-desc" class="desc"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Hasil eksekusi <span id="metrics-tag" class="tag"></span></h2>
+      <div class="metrics" id="metrics"></div>
+      <p id="agree" class="agree"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Perbandingan algoritma</h2>
+      <table class="cmp">
+        <thead><tr><th>Metrik</th><th>Ford-Fulkerson</th><th>Dinic</th></tr></thead>
+        <tbody id="cmp-body"></tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Tampilan peta</h2>
+      <label class="check"><input type="checkbox" id="chk-cut" checked /> Sorot Min-Cut (bottleneck)</label>
+      <label class="check"><input type="checkbox" id="chk-flow" checked /> Sorot jalur aliran</label>
+      <ul class="legend">
+        <li><i style="background:#dc2626"></i> Min-Cut</li>
+        <li><i style="background:#f59e0b"></i> Edge terdampak event</li>
+        <li><i style="background:#16a34a"></i> Jalur aliran</li>
+        <li><i style="background:#3b82f6"></i> Ruas biasa</li>
+      </ul>
+      <p class="desc">Tebal garis = kapasitas (kendaraan/jam). Klik ruas jalan atau titik untuk detailnya.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Min-Cut (bottleneck)</h2>
+      <ul id="mincut-list" class="plain"></ul>
+    </section>
+
+    <section class="panel">
+      <h2>Detail yang diklik</h2>
+      <div id="detail" class="desc">Klik ruas jalan atau titik pada peta.</div>
+    </section>
+
+  </aside>
+</main>
+
+<script src="assets/vendor/leaflet/leaflet.js"></script>
+<script src="assets/js/gis-map.js"></script>
+</body>
+</html>
