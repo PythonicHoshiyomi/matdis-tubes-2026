@@ -63,6 +63,11 @@
 
     <section class="panel">
       <h2>Tampilan peta</h2>
+      <div class="road-actions">
+        <button id="btn-fetch-roads" type="button" disabled>Ambil bentuk jalan</button>
+        <button id="btn-download-roads" type="button" disabled>Unduh GeoJSON</button>
+      </div>
+      <p class="desc">Rute jalan kaki OpenStreetMap membutuhkan koneksi internet. Unduh GeoJSON setelah semua edge berhasil dirutekan.</p>
       <label class="check"><input type="checkbox" id="chk-cut" checked /> Sorot Min-Cut (bottleneck)</label>
       <label class="check"><input type="checkbox" id="chk-flow" checked /> Sorot jalur aliran</label>
       <ul class="legend">
