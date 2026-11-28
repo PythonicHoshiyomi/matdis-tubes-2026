@@ -103,7 +103,9 @@
         ? { radius: 11, color: '#1e3a8a', fillColor: '#2563eb' }
         : p.role === 'sink'
           ? { radius: 11, color: '#7f1d1d', fillColor: '#dc2626' }
-          : { radius: 6, color: '#374151', fillColor: '#9ca3af' };
+          : p.role === 'gate'
+            ? { radius: 8, color: '#92400e', fillColor: '#f59e0b' }
+            : { radius: 6, color: '#374151', fillColor: '#9ca3af' };
       const m = L.circleMarker(ll(f.geometry.coordinates), { ...style, weight: 2, fillOpacity: 1 });
       m.bindTooltip(vlabel(p.id), { permanent: p.role !== 'mid', direction: 'top', className: 'node-tip' });
       m.on('click', () => showNode(p.id));
@@ -126,7 +128,10 @@
     const { cur, hits } = capacityAt(S.step);
     const st = S.res ? stateOf(S.algo, S.step) : null;
     const cutSet = new Set((st?.min_cut_edges || []).map((e) => key(e.from, e.to)));
-    const flowSet = st ? pathEdges(S.step < 0 ? (st.flow_paths || []).map((f) => f.path) : [st.path || []]) : new Set();
+    // pakai flow_paths kalo ada; kalo tidak, pakai 1 path representatif
+    const flowPaths = !st ? []
+      : (st.flow_paths && st.flow_paths.length) ? st.flow_paths.map((f) => f.path) : [st.path || []];
+    const flowSet = pathEdges(flowPaths);
     const maxCap = Math.max(1, ...S.baseCap.values());
 
     S.edgeLayers.forEach((line, k) => {
@@ -230,7 +235,7 @@
 
   function showNode(id) {
     const p = S.nodeInfo.get(id);
-    const role = p.role === 'source' ? 'Source (super-source)' : p.role === 'sink' ? 'Sink (tujuan JIS)' : 'Persimpangan / titik perantara';
+    const role = p.role === 'source' ? 'Source (super-source)' : p.role === 'sink' ? 'Sink (tujuan JIS)' : p.role === 'gate' ? 'Gate (pintu masuk JIS)' : 'Persimpangan / titik perantara';
     $('detail').innerHTML = `<b>${vlabel(id)}</b> (node ${id})<br>${esc(p.label)}<br>Peran: ${role}`;
   }
 
