@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import statistics
 import time
@@ -63,6 +64,27 @@ def _event_payload(event: Dict[str, Any], start: int, goal: int) -> Dict[str, An
     }
 
 
+def _build_topology(model) -> Dict[str, Any]:
+    """Ambil daftar vertex (id, label) dan edge (from, to, capacity) dari graf."""
+    graph = model.nx_graph
+    vertices = [
+        {
+            "id": node,
+            "label": data.get("label") or data.get("name") or str(node),
+        }
+        for node, data in graph.nodes(data=True)
+    ]
+    edges = [
+        {
+            "from": u,
+            "to": v,
+            "capacity": data.get("capacity", data.get("weight")),
+        }
+        for u, v, data in graph.edges(data=True)
+    ]
+    return {"vertices": vertices, "edges": edges}
+
+
 def _run_once(
     scenario_path: Path,
     algorithm_name: str,
@@ -88,7 +110,7 @@ def _run_once(
         "min_cut_edges": solver.min_cut_edges,
         "augmentations": solver.augmentations,
         "bfs_phases": solver.bfs_phases,
-        "flow_paths": solver.flow_paths,
+        "flow_paths": copy.deepcopy(solver.flow_paths),
     }
 
     event_results: List[Dict[str, Any]] = []
@@ -119,6 +141,7 @@ def _run_once(
                 "max_flow": max_flow,
                 "min_cut_edges": solver.min_cut_edges,
                 "min_cut_value": solver.min_cut_value,
+                "flow_paths": copy.deepcopy(solver.flow_paths),
                 "runtime_ms": elapsed_ms,
             }
         )
@@ -262,6 +285,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                         "start_node": plan["start_node"],
                         "goal_node": plan["goal_node"],
                     },
+                    "topology": _build_topology(model),
                     "results": results,
                 },
                 indent=2,
