@@ -36,13 +36,14 @@ python -m scripts.run_maxflow --repeat 5 --json output/maxflow_case22.json
 
 | Bagian | Sumber | Status |
 |---|---|---|
-| Topologi & kapasitas | `visualizer/data/jis_network.placeholder.geojson` (dibuat dari YAML oleh `scripts/make_placeholder_geojson.py`) | Koordinat **placeholder** |
+| Topologi & kapasitas | `visualizer/data/jis_network.placeholder.geojson` (nama file lama; isinya sudah diperbarui Giza) | 22 titik dan 29 ruas, kapasitas sama dengan YAML |
+| Posisi titik | disusun Giza mengikuti ilustrasi graf | **Skematik**, bukan hasil survei. Hanya V22 (JIS) di koordinat resmi |
+| Bentuk ruas jalan | rute OpenStreetMap, profil jalan kaki | Beberapa ruas berbelok jauh karena rute pejalan kaki |
 | Hasil algoritma | `output/maxflow_case22.json` | Asli (hasil Python) |
-| Jalur aliran per event | belum ada di JSON (hanya `path` representatif) | Menunggu Dava |
+| Jalur aliran per event | `flow_paths` di JSON | Jika ada, semua jalur disorot. Jika belum ada, hanya satu jalur representatif |
 
-## Saat data final datang
+## Catatan untuk tim
 
-- **Giza:** simpan `visualizer/data/jis_network.geojson` dengan skema yang sama
-  (Point: `kind="node", id, label, role`; LineString: `kind="edge", from, to, capacity`),
-  lalu ubah `geoUrl` di `assets/js/gis-map.js`.
-- **Dava:** tambahkan `flow_paths` di tiap event pada `scripts/run_maxflow.py`.
+- **Jangan jalankan ulang** `scripts/make_placeholder_geojson.py`. Skrip itu menghasilkan koordinat placeholder lama dan akan menimpa data Giza.
+- Tombol "Ambil bentuk jalan" tidak perlu diklik lagi, karena semua ruas sudah berisi bentuk jalan.
+- Jika `run_maxflow.py` atau YAML berubah, buat ulang hasilnya dengan `python -m scripts.run_maxflow --repeat 5 --json output/maxflow_case22.json`, lalu commit oleh Dava.
